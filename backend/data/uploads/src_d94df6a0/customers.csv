@@ -1,0 +1,31 @@
+﻿customer_id,company,tier,region,nps
+101,Acme Corp,Enterprise,North America,9
+102,Beta LLC,Starter,EMEA,6
+103,Gamma Inc,Pro,APAC,3
+104,Delta Co,Enterprise,North America,10
+105,Epsilon Ltd,Starter,EMEA,7
+106,Zeta GmbH,Pro,APAC,2
+107,Eta Inc,Enterprise,North America,9
+108,Theta SA,Pro,EMEA,8
+109,Iota KK,Starter,APAC,4
+110,Kappa LLC,Starter,North America,7
+111,Lambda AG,Enterprise,EMEA,10
+112,Mu Pty,Pro,APAC,3
+113,Nu Corp,Pro,North America,8
+114,Xi SARL,Starter,EMEA,6
+115,Omicron KK,Enterprise,APAC,2
+116,Pi Co,Pro,North America,9
+117,Rho Ltd,Pro,EMEA,8
+118,Sigma KK,Starter,APAC,4
+119,Tau Inc,Enterprise,North America,10
+120,Upsilon SA,Pro,EMEA,7
+121,Phi Pty,Pro,APAC,3
+122,Chi Corp,Enterprise,North America,9
+123,Psi Ltd,Starter,EMEA,6
+124,Omega KK,Enterprise,APAC,2
+125,Alpha Co,Pro,North America,8
+126,Be Ltd,Pro,EMEA,7
+127,Se KK,Starter,APAC,4
+128,De Inc,Enterprise,North America,10
+129,Ef SA,Pro,EMEA,8
+130,Ze KK,Pro,APAC,3

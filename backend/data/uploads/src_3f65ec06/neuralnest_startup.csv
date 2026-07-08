@@ -1,0 +1,76 @@
+category,field,value
+Company Info,Name,NeuralNest
+Company Info,Founded,2021
+Company Info,Headquarters,"San Francisco, CA"
+Company Info,Industry,Artificial Intelligence / SaaS
+Company Info,Stage,Series B
+Company Info,Website,neuralnest.ai
+Company Info,Description,AI-powered knowledge management platform for enterprise teams
+Company Info,Tagline,Think Together. Build Faster.
+
+Funding,Pre-Seed Amount,$800,000
+Funding,Pre-Seed Date,March 2021
+Funding,Pre-Seed Investors,"Angel investors, Y Combinator"
+Funding,Seed Amount,$4,500,000
+Funding,Seed Date,November 2021
+Funding,Seed Investors,"Sequoia Scout Fund, Pear VC"
+Funding,Series A Amount,$18,000,000
+Funding,Series A Date,August 2022
+Funding,Series A Lead Investor,Andreessen Horowitz (a16z)
+Funding,Series B Amount,$55,000,000
+Funding,Series B Date,January 2024
+Funding,Series B Lead Investor,Tiger Global
+Funding,Total Raised,$78,300,000
+Funding,Post-Money Valuation,$420,000,000
+
+Team,CEO,Priya Sharma
+Team,CTO,James Okafor
+Team,CPO,Lin Wei
+Team,Head of Sales,Marcus Delacroix
+Team,Head of Design,Sofia Reyes
+Team,Total Employees,187
+Team,Engineering Headcount,94
+Team,Sales & Marketing Headcount,51
+Team,Operations & G&A Headcount,42
+
+Products,Core Product,NeuralNest Workspace
+Products,Core Product Launch,Q1 2022
+Products,Add-on,NeuralNest API
+Products,Add-on Launch,Q3 2022
+Products,Add-on,NeuralNest Enterprise Suite
+Products,Add-on Launch,Q2 2023
+Products,Pricing - Starter,$29/user/month
+Products,Pricing - Pro,$79/user/month
+Products,Pricing - Enterprise,Custom
+
+Metrics (2024),ARR,$38,000,000
+Metrics (2024),ARR Growth YoY,142%
+Metrics (2024),Total Customers,1,240
+Metrics (2024),Enterprise Customers (>500 seats),87
+Metrics (2024),Net Revenue Retention,128%
+Metrics (2024),Gross Margin,74%
+Metrics (2024),Monthly Active Users,64,000
+Metrics (2024),Avg Contract Value (ACV),$30,645
+Metrics (2024),Customer Acquisition Cost (CAC),$8,200
+Metrics (2024),LTV:CAC Ratio,11.2x
+Metrics (2024),Churn Rate (Annual),6.3%
+
+Technology,Primary Language,Python
+Technology,Frontend,React / TypeScript
+Technology,Backend,FastAPI
+Technology,Database,PostgreSQL + Pinecone (vector)
+Technology,Cloud Provider,AWS
+Technology,AI Models Used,"GPT-4o, Claude 3.5, fine-tuned in-house models"
+Technology,Key Differentiator,Real-time multi-agent collaboration graph
+
+Notable Customers,Customer 1,Stripe
+Notable Customers,Customer 2,Notion
+Notable Customers,Customer 3,Figma
+Notable Customers,Customer 4,Databricks
+Notable Customers,Customer 5,Coinbase
+
+Awards & Recognition,Award,Forbes AI 50 (2024)
+Awards & Recognition,Award,Fast Company Most Innovative Companies (2023)
+Awards & Recognition,Award,Y Combinator Top Company Alumni
+Awards & Recognition,Press,TechCrunch feature — Feb 2024
+Awards & Recognition,Press,Wired profile — May 2024

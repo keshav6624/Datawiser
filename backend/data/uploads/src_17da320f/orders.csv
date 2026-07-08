@@ -1,0 +1,98 @@
+--122533fe-076d-487b-902f-d9b1aba44ae3
+Content-Disposition: form-data; name="files"; filename="customers.csv"
+Content-Type: text/csv
+
+﻿order_id,customer_id,region,product,revenue,order_date,churned
+1,105,North America,Starter,300,2026-06-06,true
+2,122,EMEA,Pro Plan,1200,2026-06-25,false
+3,108,EMEA,Pro Plan,1200,2026-06-26,false
+4,116,North America,Enterprise,5000,2026-06-25,false
+5,105,North America,Enterprise,5000,2026-06-19,false
+6,102,APAC,Pro Plan,1200,2026-06-12,false
+7,116,North America,Pro Plan,1200,2026-06-05,false
+8,125,North America,Starter,300,2026-06-10,false
+9,112,North America,Pro Plan,1200,2026-06-03,true
+10,119,North America,Pro Plan,1200,2026-06-01,false
+11,120,North America,Pro Plan,1200,2026-06-23,false
+12,102,EMEA,Enterprise,5000,2026-06-13,false
+13,101,EMEA,Pro Plan,1200,2026-06-27,true
+14,103,EMEA,Pro Plan,1200,2026-06-04,false
+15,116,EMEA,Pro Plan,1200,2026-06-17,false
+16,101,North America,Starter,300,2026-07-06,true
+17,128,EMEA,Starter,300,2026-05-26,false
+18,112,North America,Starter,300,2026-07-05,false
+19,113,North America,Enterprise,5000,2026-06-13,false
+20,101,APAC,Enterprise,5000,2026-06-03,false
+21,105,North America,Starter,300,2026-06-05,false
+22,105,North America,Pro Plan,1200,2026-06-02,false
+23,130,APAC,Enterprise,5000,2026-06-13,false
+24,117,APAC,Starter,300,2026-06-23,true
+25,128,North America,Pro Plan,1200,2026-06-21,false
+26,107,EMEA,Starter,300,2026-07-05,true
+27,104,North America,Pro Plan,1200,2026-05-23,false
+28,125,North America,Pro Plan,1200,2026-06-03,false
+29,108,APAC,Enterprise,5000,2026-05-27,false
+30,120,EMEA,Pro Plan,1200,2026-06-12,false
+31,101,North America,Enterprise,5000,2026-06-28,false
+32,105,APAC,Pro Plan,1200,2026-06-01,false
+33,117,APAC,Pro Plan,1200,2026-06-11,false
+34,127,EMEA,Starter,300,2026-06-19,false
+35,117,APAC,Enterprise,5000,2026-06-16,true
+36,101,North America,Enterprise,5000,2026-07-02,false
+37,118,EMEA,Pro Plan,1200,2026-06-18,false
+38,127,North America,Starter,300,2026-05-24,false
+39,129,APAC,Enterprise,5000,2026-06-09,false
+40,116,APAC,Pro Plan,1200,2026-06-21,false
+41,106,North America,Pro Plan,1200,2026-06-07,false
+42,103,EMEA,Enterprise,5000,2026-06-08,false
+43,129,APAC,Starter,300,2026-06-01,false
+44,105,EMEA,Pro Plan,1200,2026-05-24,false
+45,122,North America,Enterprise,5000,2026-06-14,false
+46,122,North America,Starter,300,2026-06-13,false
+47,106,APAC,Pro Plan,1200,2026-06-10,true
+48,110,North America,Pro Plan,1200,2026-06-27,false
+49,115,EMEA,Starter,300,2026-05-28,false
+50,130,EMEA,Enterprise,5000,2026-06-07,false
+51,129,EMEA,Starter,300,2026-06-28,false
+52,103,EMEA,Enterprise,5000,2026-05-24,false
+53,127,APAC,Pro Plan,1200,2026-05-26,false
+54,101,APAC,Starter,300,2026-06-10,false
+55,130,North America,Enterprise,5000,2026-06-07,false
+56,111,EMEA,Pro Plan,1200,2026-07-05,false
+57,111,EMEA,Pro Plan,1200,2026-06-13,false
+58,119,North America,Starter,300,2026-06-08,true
+59,126,North America,Enterprise,5000,2026-06-30,false
+60,118,EMEA,Pro Plan,1200,2026-07-06,true
+
+﻿customer_id,company,tier,region,nps
+101,Acme Corp,Enterprise,North America,9
+102,Beta LLC,Starter,EMEA,6
+103,Gamma Inc,Pro,APAC,3
+104,Delta Co,Enterprise,North America,10
+105,Epsilon Ltd,Starter,EMEA,7
+106,Zeta GmbH,Pro,APAC,2
+107,Eta Inc,Enterprise,North America,9
+108,Theta SA,Pro,EMEA,8
+109,Iota KK,Starter,APAC,4
+110,Kappa LLC,Starter,North America,7
+111,Lambda AG,Enterprise,EMEA,10
+112,Mu Pty,Pro,APAC,3
+113,Nu Corp,Pro,North America,8
+114,Xi SARL,Starter,EMEA,6
+115,Omicron KK,Enterprise,APAC,2
+116,Pi Co,Pro,North America,9
+117,Rho Ltd,Pro,EMEA,8
+118,Sigma KK,Starter,APAC,4
+119,Tau Inc,Enterprise,North America,10
+120,Upsilon SA,Pro,EMEA,7
+121,Phi Pty,Pro,APAC,3
+122,Chi Corp,Enterprise,North America,9
+123,Psi Ltd,Starter,EMEA,6
+124,Omega KK,Enterprise,APAC,2
+125,Alpha Co,Pro,North America,8
+126,Be Ltd,Pro,EMEA,7
+127,Se KK,Starter,APAC,4
+128,De Inc,Enterprise,North America,10
+129,Ef SA,Pro,EMEA,8
+130,Ze KK,Pro,APAC,3
+
