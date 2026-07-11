@@ -87,6 +87,18 @@ def _resolve_column(name: str, schema: dict[str, TableSchema], kind_hint: str | 
     return None
 
 
+TOP_WORD_RE = re.compile(r"\btop\s+(\d+\s+)?([a-z_]+)", re.I)
+
+
+def _resolve_top_word(question: str, schema: dict[str, TableSchema], kind_hint: str | None = None) -> tuple[str, str] | None:
+    """Extract the noun after 'top' (e.g. 'regions' from 'Top regions by revenue') and resolve it."""
+    m = TOP_WORD_RE.search(question)
+    if m:
+        word = m.group(2).strip()
+        return _resolve_column(word, schema, kind_hint)
+    return None
+
+
 def detect_intent(question: str, schema: dict[str, TableSchema]) -> ParsedIntent:
     q = question.lower()
     intent = ParsedIntent(raw=question)
@@ -271,7 +283,8 @@ def generate_sql(question: str, intent: ParsedIntent, schema: dict[str, TableSch
     if table is None:
         return ["SELECT 1;"]
     t = schema[table]
-    measure_col = intent.target_column or next((c.name for c in t.columns if c.kind == "numeric"), "*")
+    measure_col = intent.target_column or next((c.name for c in t.columns if c.kind == "numeric"), None)
+    use_count = measure_col is None
 
     time_col = _find_time_col(schema, prefer_table=table)
     where = ""
@@ -309,7 +322,8 @@ def generate_sql(question: str, intent: ParsedIntent, schema: dict[str, TableSch
                         # join the dimension table via FK if known
                         statements = _compare_with_join(schema, intent, table, measure_col, tt, tc, unit)
                         return statements
-            base = f'SELECT SUM("{table}"."{measure_col}") AS measure{dim_clause} FROM "{table}"'
+            agg_expr = "COUNT(*) AS measure" if use_count else f'SUM("{table}"."{measure_col}") AS measure'
+            base = f'SELECT {agg_expr}{dim_clause} FROM "{table}"'
             cur = f'{base} WHERE DATE_TRUNC(\'{unit}\', "{tt}"."{tc}") = DATE_TRUNC(\'{unit}\', CURRENT_DATE)'
             prev = f'{base} WHERE DATE_TRUNC(\'{unit}\', "{tt}"."{tc}") = DATE_TRUNC(\'{unit}\', CURRENT_DATE) - INTERVAL \'1 {unit}\''
             if group_clause:
@@ -345,16 +359,18 @@ def generate_sql(question: str, intent: ParsedIntent, schema: dict[str, TableSch
                 select_dims.append(f'"{table}"."{dc}" AS {dc}')
                 group_dims.append(f'"{table}"."{dc}"')
 
-    agg = f'SUM("{table}"."{measure_col}") AS {measure_col}'
-    if intent.measure and "_id" in (intent.measure or "").lower():
-        # if the chosen measure looks like an ID, count rows instead
-        agg = f'COUNT(*) AS count'
-    sel = ", ".join(select_dims + [agg])
+    if use_count:
+        agg_str = "COUNT(*) AS count"
+    else:
+        agg_str = f'SUM("{table}"."{measure_col}") AS {measure_col}'
+    if not use_count and intent.measure and "_id" in (intent.measure or "").lower():
+        use_count = True
+        agg_str = "COUNT(*) AS count"
+    sel = ", ".join(select_dims + [agg_str])
     group_by = f" GROUP BY {', '.join(group_dims)}" if group_dims else ""
     order_by = ""
     if intent.top_n:
-        # order by measure desc, limit
-        order_col = agg.split(" AS ")[1]
+        order_col = agg_str.split(" AS ")[1]
         assert order_col  # for type checker
         order_by = f" ORDER BY {order_col} DESC LIMIT {intent.top_n}"
     elif any("AS " in s for s in select_dims) and group_dims:
@@ -373,7 +389,8 @@ def _compare_with_join(schema, intent, table, measure_col, tt, tc, unit):
         if fk:
             join_clause = f' LEFT JOIN "{dt}" ON "{table}"."{fk.name}" = "{dt}"."id"'
     dim_sel = f'"{dt}"."{dc}" AS dim' if not dt == table else f'"{table}"."{dc}" AS dim'
-    base = f'SELECT {dim_sel}, SUM("{table}"."{measure_col}") AS measure FROM "{table}"{join_clause}'
+    agg_expr = "COUNT(*) AS measure" if measure_col is None else f'SUM("{table}"."{measure_col}") AS measure'
+    base = f'SELECT {dim_sel}, {agg_expr} FROM "{table}"{join_clause}'
     cur = f"{base} WHERE DATE_TRUNC('{unit}', \"{tt}\".\"{tc}\") = DATE_TRUNC('{unit}', CURRENT_DATE) GROUP BY \"{dt}\".\"{dc}\""
     prev = f"{base} WHERE DATE_TRUNC('{unit}', \"{tt}\".\"{tc}\") = DATE_TRUNC('{unit}', CURRENT_DATE) - INTERVAL '1 {unit}' GROUP BY \"{dt}\".\"{dc}\""
     return [prev, cur]
