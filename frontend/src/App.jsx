@@ -95,20 +95,9 @@ export default function App() {
         alert("Upload failed: " + (res.error || "Unknown error"));
         return;
       }
-      await refreshSources();
-      setView("main");
-    } catch (e) { alert("Upload failed: " + e.message); }
-    setLoading(false);
-  }
-      const nextSources = await refreshSources();
-      const newlyUploaded = nextSources.find((source) => source.id === res.source_id) || nextSources[0];
-      if (newlyUploaded) {
-        setActiveSource(newlyUploaded);
-        setSchema(res.tables ? { source_id: res.source_id, tables: res.tables } : null);
-        setSchemaError("");
-        setMessages([]);
-        setConversationId(null);
-        if (!res.tables) await selectSource(newlyUploaded);
+      setActiveSource({ id: res.source_id, name, type: "csv" });
+      if (res.tables) {
+        setSchema({ source_id: res.source_id, tables: res.tables });
       }
       setTab("chat");
       setView("main");
