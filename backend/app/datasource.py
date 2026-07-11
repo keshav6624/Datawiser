@@ -159,7 +159,15 @@ class FileConnector(BaseConnector):
             if not f.exists():
                 continue
             table_name = _SANITIZE_RE.sub("", f.stem.lower().replace(" ", "_").replace("-", "_"))
-            df = pd.read_csv(f) if f.suffix.lower() == ".csv" else pd.read_excel(f)
+            try:
+                if f.suffix.lower() == ".csv":
+                    df = pd.read_csv(f, on_bad_lines="skip", encoding_errors="replace")
+                else:
+                    df = pd.read_excel(f)
+            except Exception as e:
+                raise ValueError(f"Failed to read {f.name}: {e}")
+            if df.empty:
+                raise ValueError(f"{f.name} has no valid rows after parsing")
             df.columns = _sanitize_column_names(list(df.columns))
             # Auto-parse columns that look like dates so DuckDB types them as
             # TIMESTAMP/DATE (otherwise date_trunc breaks).
