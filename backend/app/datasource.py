@@ -10,6 +10,7 @@ Connections are read-only by design.
 from __future__ import annotations
 
 import os
+import re
 import sqlite3
 import tempfile
 from dataclasses import dataclass, field
@@ -43,6 +44,38 @@ class TableSchema:
 
 
 # ---------- helpers ----------
+
+_SANITIZE_RE = re.compile(r"[^a-zA-Z0-9_]")
+
+
+def _sanitize_column_names(names: list[str]) -> list[str]:
+    """Produce a list of valid, unique SQL column identifiers."""
+    replacements = {
+        "$": "dollar", "%": "pct", "#": "num", "@": "at",
+        "&": "and", "|": "or", "<": "lt", ">": "gt", "=": "eq",
+        "+": "plus", "*": "star", "/": "per", "\\": "per",
+        "(": "", ")": "", "[": "", "]": "", "{": "", "}": "",
+        ":": "", ";": "", "'": "", '"': "", ",": "", ".": "_dot_",
+        "?": "", "!": "", "~": "", "`": "", "^": "",
+    }
+    sanitized: list[str] = []
+    seen: set[str] = set()
+    for i, n in enumerate(names):
+        s = n.strip().replace(" ", "_").replace("-", "_")
+        for old, new in replacements.items():
+            s = s.replace(old, new)
+        s = _SANITIZE_RE.sub("", s)
+        if not s or s[0].isdigit():
+            s = f"col_{i}"
+        # deduplicate
+        base = s
+        counter = 1
+        while s in seen:
+            s = f"{base}_{counter}"
+            counter += 1
+        sanitized.append(s)
+        seen.add(s)
+    return sanitized
 
 def _classify(dtype: str, series: pd.Series) -> str:
     s = series.dtype
@@ -125,9 +158,9 @@ class FileConnector(BaseConnector):
         for f in self._files:
             if not f.exists():
                 continue
-            table_name = f.stem.lower().replace(" ", "_").replace("-", "_")
+            table_name = _SANITIZE_RE.sub("", f.stem.lower().replace(" ", "_").replace("-", "_"))
             df = pd.read_csv(f) if f.suffix.lower() == ".csv" else pd.read_excel(f)
-            df.columns = [c.strip().replace(" ", "_").replace("-", "_") for c in df.columns]
+            df.columns = _sanitize_column_names(list(df.columns))
             # Auto-parse columns that look like dates so DuckDB types them as
             # TIMESTAMP/DATE (otherwise date_trunc breaks).
             for col in df.columns:
@@ -148,10 +181,17 @@ class FileConnector(BaseConnector):
 
     def get_schema(self) -> dict[str, TableSchema]:
         tables: dict[str, TableSchema] = {}
+        has_info_schema = self._has_information_schema()
         for tname in self._tables:
-            cols_info = self._con.execute(
-                f"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{tname}'"
-            ).fetchall() if self._has_information_schema() else self._fallback_columns(tname)
+            if has_info_schema:
+                try:
+                    cols_info = self._con.execute(
+                        "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = ?", [tname]
+                    ).fetchall()
+                except Exception:
+                    cols_info = self._fallback_columns(tname)
+            else:
+                cols_info = self._fallback_columns(tname)
             count = self._con.execute(f'SELECT COUNT(*) FROM "{tname}"').fetchone()[0]
             t = TableSchema(name=tname, row_count=count)
             for cname, ctype in cols_info:

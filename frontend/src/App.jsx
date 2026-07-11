@@ -91,9 +91,15 @@ export default function App() {
     setLoading(true);
     try {
       const res = await uploadFiles(name, files);
-      if (res.status && res.status !== "active") {
-        throw new Error(res.error || "The uploaded CSV could not be analyzed.");
+      if (res.status !== "active") {
+        alert("Upload failed: " + (res.error || "Unknown error"));
+        return;
       }
+      await refreshSources();
+      setView("main");
+    } catch (e) { alert("Upload failed: " + e.message); }
+    setLoading(false);
+  }
       const nextSources = await refreshSources();
       const newlyUploaded = nextSources.find((source) => source.id === res.source_id) || nextSources[0];
       if (newlyUploaded) {

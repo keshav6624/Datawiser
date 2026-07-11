@@ -127,17 +127,18 @@ async def upload(request: Request, name: str = Form(...), files: list[UploadFile
         saved.append(str(p))
     cfg = {"files": saved}
     conn = persistence.get_db()
-    persistence.save_source(conn, source_id, org, name, "csv", cfg)
     # build schema right away
     try:
         c = build_connector("csv", source_id=source_id, files=[Path(x) for x in saved])
         schema = c.get_schema()
         schema_json = schema_to_json(schema)
-        persistence.cache_schema(conn, source_id, schema_json)
-        _connectors[source_id] = c
     except Exception as e:
         conn.close()
         return {"source_id": source_id, "status": "error", "error": str(e)}
+    # only save source and cache schema if connector succeeded
+    persistence.save_source(conn, source_id, org, name, "csv", cfg)
+    persistence.cache_schema(conn, source_id, schema_json)
+    _connectors[source_id] = c
     conn.close()
     return {"source_id": source_id, "status": "active", "files": [Path(x).name for x in saved], "tables": schema_json}
 
@@ -224,15 +225,20 @@ def _load_schema(conn, source_id: str) -> dict[str, TableSchema]:
 
 @app.get("/api/schema")
 def get_schema(source_id: str) -> dict:
-    conn = persistence.get_db()
-    schema_json = persistence.get_cache_schema(conn, source_id)
-    if not schema_json:
-        c = _build_connector(source_id)
-        schema = c.get_schema()
-        schema_json = schema_to_json(schema)
-        persistence.cache_schema(conn, source_id, schema_json)
-    conn.close()
-    return {"source_id": source_id, "tables": schema_json}
+    try:
+        conn = persistence.get_db()
+        schema_json = persistence.get_cache_schema(conn, source_id)
+        if not schema_json:
+            c = _build_connector(source_id)
+            schema = c.get_schema()
+            schema_json = schema_to_json(schema)
+            persistence.cache_schema(conn, source_id, schema_json)
+        conn.close()
+        return {"source_id": source_id, "tables": schema_json}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(400, detail=f"Schema unavailable: {e}")
 
 
 @app.post("/api/generate-sql")
